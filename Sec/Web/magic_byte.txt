@@ -1,0 +1,36 @@
+
+=> Magic Byte
+
+- A unique byte pattern at the start of a file that identifies its real file type, regardless of file extension.
+
+Why it matters:
+- Attackers often bypass upload filters by changing only the extension: shell.php -> rename to -> image.jpg
+- But the server can detect real type by checking the magic bytes (file header).
+- So secure systems validate uploads using:
+    - magic bytes
+    - MIME type
+    - Content parsing + re-encoding
+
+Example magic bytes (file signatures)
+File type   Magic bytes (hex)           Header text
+JPG/JPEG    FF D8 FF                    —
+PNG         89 50 4E 47 0D 0A 1A 0A     .PNG....
+PDF         25 50 44 46                 %PDF
+ZIP         50 4B 03 04                 PK..
+GIF         47 49 46 38                 GIF8
+
+Common security issues related to magic bytes
+- File upload bypass
+    - If server checks only: extension (.jpg) or only MIME (image/jpeg) attacker can upload dangerous files.
+- Proper validation:
+    - check magic bytes (file signature)
+    - decode/parse expected format
+    - strip metadata
+    - store outside web root
+    - rename file + no user-controlled path
+- Polyglot files
+    - A single file can be valid as: image + HTML, image + PHP, PDF + JS
+    - Some polyglots can pass magic byte checks but still execute in certain contexts.
+- Content-Type confusion
+    - Sometimes server trusts Content-Type header: Content-Type: image/jpeg
+    - But attacker can lie. Magic byte validation helps.
