@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <body style="margin: 2rem;">
+    <h3>Cross-Frame Scripting (XFS)</h3>
     <form onsubmit="f(); return false;">
         <input id="u" placeholder="https://example.com" style="width:25%;" required>
         <button type="submit">Check</button>
     </form>
 
     <p id="s"></p>
-    <iframe id="i" style="width:75%;height:500px;"></iframe>
+    <iframe id="i" style="width:70%;height:500px;opacity:0.75"></iframe>
 </body>
 <script>
     function f(){
