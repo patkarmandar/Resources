@@ -1,7 +1,36 @@
 
-Mobile Application (Android) VAPT
+Android Application VAPT
 
-- Reverse engineering app binaries (APK/IPA): secrets in code, API keys, hard-coded endpoints
-- Inter-app communication, deep link handling, SSL pinning weaknesses
-- Local data storage encryption, keychain/keystore checks
-- API usage via mobile app flows (session reuse, tokens)
+Static Analysis Tools
+- MobSF
+- Jadx
+- dex2jar
+- JADX-GUI
+- JADX CLI
+- apktool
+
+Dynamic Analysis Tools
+- Frida
+- Objection
+- ADB
+- Logcat
+- Drozer (for exported components testing)
+
+Traffic Interception with Burp Suite
+- Configure proxy in Android WiFi
+- Install proxy CA certificate
+- Move certificate to system store (for rooted devices)
+- Bypass SSL pinning using Frida scripts
+
+Exploitation Testing Setup
+- Insecure storage
+- Reverse engineering app binaries (hardcoded secrets in code, API keys, hard-coded endpoints)
+- Exported activities/services
+- Deep link abuse
+- WebView injection
+- Intent redirection
+- Insecure deserialization
+- JWT manipulation
+- Root detection bypass
+- SSL pinning bypass
+- Biometric bypass testing

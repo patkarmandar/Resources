@@ -1,0 +1,10 @@
+
+API VAPT
+
+
+=> APIs, Microservices, GraphQL, WebSockets
+- REST: missing auth on endpoints, improper rate-limiting, excessive data exposure
+- GraphQL: introspection, excessive queries, schema leaks, query complexity DOS
+- gRPC/WebSockets: authentication, message validation
+- API parameter tampering: IDORs, mass assignment
+- API versioning & deprecated endpoints

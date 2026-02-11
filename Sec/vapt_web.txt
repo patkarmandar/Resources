@@ -1,5 +1,5 @@
 
-Web Application & API VAPT
+Web Application VAPT
 
 => Reconnaissance/Enumeration
 - Passive:
@@ -299,10 +299,3 @@ Web Application & API VAPT
     - Check for external numeric IP’s and resolve it
     - Test cloud storage
     - Check the existence of alternative channels (www.web.com vs m.web.com)
-
-=> APIs, Microservices, GraphQL, WebSockets
-- REST: missing auth on endpoints, improper rate-limiting, excessive data exposure
-- GraphQL: introspection, excessive queries, schema leaks, query complexity DOS
-- gRPC/WebSockets: authentication, message validation
-- API parameter tampering: IDORs, mass assignment
-- API versioning & deprecated endpoints
