@@ -1,36 +1,328 @@
 
 Android Application VAPT
 
-Static Analysis Tools
-- MobSF
-- Jadx
-- dex2jar
-- JADX-GUI
-- JADX CLI
-- apktool
+=> Static Analysis Tools
+- JADX -> Decompile APK -> Analyze Java code, secrets, logic
+- Apktool -> Decode APK -> Analyze manifest, smali, structure
+- dex2jar -> Convert dex to jar -> Alternative decompile method
+- MobSF -> Automated scanner-> Find vulnerabilities automatically
+- strings -> Extract text from binaries -> Find keys in native libraries
 
-Dynamic Analysis Tools
-- Frida
-- Objection
-- ADB
-- Logcat
-- Drozer (for exported components testing)
+=> Dynamic Analysis Tools
+- Frida -> Hook app, bypass protections
+- Objection -> Easy Frida automation
+- BurpSuite -> Intercept and modify API traffic
+- Drozer -> Test exported components
+- ADB -> Control device and access files
+- Logcat -> Monitor app logs
 
-Traffic Interception with Burp Suite
+=> Traffic Interception with Burp Suite
 - Configure proxy in Android WiFi
 - Install proxy CA certificate
 - Move certificate to system store (for rooted devices)
 - Bypass SSL pinning using Frida scripts
 
-Exploitation Testing Setup
-- Insecure storage
-- Reverse engineering app binaries (hardcoded secrets in code, API keys, hard-coded endpoints)
-- Exported activities/services
-- Deep link abuse
-- WebView injection
-- Intent redirection
-- Insecure deserialization
-- JWT manipulation
-- Root detection bypass
-- SSL pinning bypass
-- Biometric bypass testing
+=> Setup & Environment Preparation
+- Test Environment
+    - Rooted Android device available
+    - Emulator available
+    - Burp Suite configured
+    - Proxy installed on device
+    - CA certificate installed
+    - Frida installed and working
+    - Objection installed
+    - adb configured
+- Verify:
+    - adb devices
+    - frida-ps -U
+
+---
+
+=> Android Pentesting Checklist/Test Cases
+
+- Reconnaissance & Information Gathering
+    - APK Basic Information
+        - Extract using:
+            - aapt dump badging app.apk
+        - Check:
+            - App Name
+            - Package Name
+            - Version Name
+            - Version Code
+            - Min SDK Version
+            - Target SDK Version
+            - Permissions
+            - Launch Activity
+    - Signing Certificate Analysis
+        - Check: keytool -printcert -jarfile app.apk
+        - Verify:
+            - Debug certificate used
+            - Production certificate used
+        - Risk: Debug certificate allows tampering.
+    - Identify Attack Surface
+        - Document all:
+            - Activities
+            - Services
+            - Broadcast Receivers
+            - Content Providers
+            - Deep links
+            - Network endpoints
+            - APIs used
+            - Third-party services
+        - Tools:
+            - MobSF
+            - apktool
+            - jadx
+- Static Analysis
+    - AndroidManifest.xml Security Analysis
+        - Extract: apktool d app.apk
+        - Exported Activities
+            - Check: android:exported="true"
+            - Test:
+                - Launch activity without authentication: adb shell am start -n package/.Activity
+                - Access hidden functionality
+                - Access admin activity
+        - Exported Services
+            - Test:
+                - Start service externally
+                - Abuse service functionality
+        - Exported Broadcast Receivers
+            - Test: adb shell am broadcast -a ACTION_NAME
+            - Check:
+                - Trigger sensitive operations
+                - Bypass authentication
+        - Exported Content Providers
+            - Test: adb shell content query --uri content://package.provider/
+            - Check:
+                - Unauthorized read
+                - Unauthorized write
+    - Permission Analysis
+        - Check dangerous permissions:
+            - READ_EXTERNAL_STORAGE
+            - WRITE_EXTERNAL_STORAGE
+            - READ_CONTACTS
+            - CAMERA
+            - RECORD_AUDIO
+            - READ_SMS
+            - ACCESS_FINE_LOCATION
+        - Verify necessity.
+    - Debuggable Flag
+        - Check: android:debuggable="true"
+        - Risk: Full compromise possible
+    - Backup Enabled
+        - Check: android:allowBackup="true"
+        - Test: adb backup
+        - Risk: Sensitive data extraction
+    - Cleartext Traffic Allowed
+        - Check: android:usesCleartextTraffic="true"
+        - Risk: MITM possible
+- Hardcoded Secrets Testing
+    - Search source code for:
+        - API keys
+        - Tokens
+        - Passwords
+        - Encryption keys
+        - Bearer tokens
+        - Firebase keys
+        - AWS keys
+    - Search keywords:
+        - password
+        - token
+        - secret
+        - key
+        - authorization
+        - bearer
+        - firebase
+- Reverse Engineering Protections
+    - Check:
+        - Obfuscation enabled
+        - ProGuard enabled
+        - R8 enabled
+    - Risk if missing: Easy reverse engineering
+- Local Storage Testing
+    - Path: /data/data/package/
+    - Shared Preferences
+        - Check: /data/data/package/shared_prefs/
+        - Test:
+            - Tokens stored plaintext
+            - Credentials stored
+            - Sensitive data stored
+    - SQLite Database
+        - Check: /data/data/package/databases/
+        - Test:
+            - Plaintext credentials
+            - Sensitive user data
+    - Internal Storage
+        - Check: /data/data/package/files/
+        - Test:
+            - Sensitive files present
+    - External Storage
+        - Check: /sdcard/
+        - Test:
+            - Sensitive data stored
+            - Public access possible
+    - Cache Storage
+        - Check: /data/data/package/cache/
+        - Test:
+            - Sensitive data cached
+- Authentication Testing
+    - Test cases:
+        - Authentication bypass
+        - Login without credentials
+        - Weak password policy
+        - Brute force protection missing
+        - Account lockout missing
+        - OTP bypass
+        - Token reuse
+        - Session fixation
+        - Session not invalidated after logout
+        - Biometric bypass
+- Authorization Testing
+    - Test:
+        - Horizontal privilege escalation
+        - Vertical privilege escalation
+        - Access other user's data
+        - Access admin functionality
+        - IDOR via API
+    - Example: user_id=123 -> 124
+- Network Communication Testing
+    - Intercept using:
+        - Burp Suite
+        - mitmproxy
+    - Insecure Communication
+        - Check:
+            - HTTP used
+            - Sensitive data in HTTP
+    - Sensitive Data Exposure
+        - Check exposure of:
+            - Passwords
+            - Tokens
+            - Session ID
+            - Personal data
+    - SSL Pinning Testing
+        - Check:
+            - SSL pinning implemented
+            - Attempt bypass using Frida
+    - Certificate Validation
+        - Check:
+            - Improper validation
+            - Accepts invalid certificates
+- API Security Testing
+    - Test:
+        - IDOR
+        - SQL Injection
+        - Auth bypass
+        - Rate limit bypass
+        - Business logic bypass
+- WebView Testing
+    - Check: setJavaScriptEnabled(true)
+    - Test:
+        - XSS
+        - Load arbitrary URLs
+        - Access local files
+    - Check: setAllowFileAccess(true)
+    - Risk: Local file theft
+- Deep Link Testing
+    - Check manifest for: android.intent.action.VIEW
+    - Test: adb shell am start -a android.intent.action.VIEW -d "app://..."
+    - Test:
+        - Authentication bypass
+        - Access restricted pages
+- Intent Security Testing
+    - Test:
+        - Intent injection
+        - Intent redirection
+- Content Provider Testing
+    - Test: adb shell content query --uri content://
+    - Check:
+        - Unauthorized read
+        - Unauthorized write
+- Dynamic Analysis
+    - Monitor runtime behavior.
+    - Tools:
+        - Frida
+        - Objection
+    - Check:
+        - Runtime manipulation possible
+        - Token extraction possible
+- Log Analysis
+    - Check using: adb logcat
+    - Check exposure of:
+        - Passwords
+        - Tokens
+        - Sensitive data
+- Cryptography Testing
+    - Check:
+        - Weak encryption
+        - Hardcoded keys
+        - ECB mode used
+        - Custom crypto
+- Root Detection Testing
+    - Check if implemented.
+    - Test bypass using:
+        - Frida
+        - Magisk
+        - Objection
+- Certificate Pinning Bypass
+    - Test bypass
+- Emulator Detection Testing
+    - Check:
+        - Emulator detection present
+        - Attempt bypass
+- Code Tampering Testing
+    - Test:
+        - Modify APK
+        - Reinstall
+    - Check if detected.
+- Runtime Protections
+    - Check presence of:
+        - Root detection
+        - Emulator detection
+        - Debug detection
+        - Frida detection
+- Clipboard Testing
+    - Test:
+        - Sensitive data copied to clipboard
+- Screenshot Protection
+    - Check if enabled: FLAG_SECURE
+- Firebase Security Testing
+    - Check:
+        - Firebase database exposed
+        - Unauthorized access possible
+- Third-party Library Testing
+    - Check:
+        - Outdated libraries
+        - Vulnerable dependencies
+- File System Testing
+    - Test:
+        - Path traversal
+        - Arbitrary file access
+- Overlay Attack Testing
+    - Check:
+        - Tapjacking possible
+        - Overlay attack possible
+- Business Logic Testing
+    - Test:
+        - Payment bypass
+        - Subscription bypass
+        - Account takeover
+        - Workflow bypass
+- Runtime Exploitation Testing
+    - Using Frida / Objection:
+        - Test:
+            - Bypass root detection
+            - Extract tokens
+            - Modify app behavior
+- MASVS Compliance Verification
+    - Verify:
+        - MASVS-STORAGE
+        - MASVS-NETWORK
+        - MASVS-CRYPTO
+        - MASVS-AUTH
+        - MASVS-PLATFORM
+        - MASVS-CODE
+- Advanced Exploitation Testing
+    - Test:
+        - SSL pinning bypass
+        - Runtime hooking
+        - Logic manipulation

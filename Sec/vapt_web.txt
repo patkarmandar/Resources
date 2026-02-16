@@ -76,7 +76,7 @@ Web Application VAPT
     - Corrupt authentication and session defects: Sign up, don’t verify, request change password, change, check if account is active.
     - Try to re-register repeating same request with same password and different password too
     - If JSON request, add comma {"email":"victim@mail.com","hacker@mail.com","token":"xxxxxxxxxx"}
-    - Lack of confirmation → try to register with company email
+    - Lack of confirmation -> try to register with company email
     - Check OAuth with social media registration
     - Check state parameter on social media registration
     - Try to capture integration url leading integration takeover
@@ -288,6 +288,7 @@ Web Application VAPT
     - Generate error by giving input as "/~randomthing/%s" at the end of URL
     - Use Burp Intruder "Fuzzing Full" List in input to generate error codes
     - Try different HTTP Verbs like PATCH, DEBUG or wrong like FAKE
+    - Input more char/data that size limit or exposed size
 - Infrastructure:
     - Segregation in shared infrastructures
     - Segregation between ASP-hosted applications

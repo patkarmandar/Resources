@@ -65,7 +65,7 @@ Techniques:
         - Transfer-Encoding: xchunked
         - Multiple TE headers
     - Exploit idea:
-        - One server ignores malformed TE, the other accepts it → desync.
+        - One server ignores malformed TE, the other accepts it -> desync.
 - CL.CL (Multiple Content-Length)
     - What happens:
         - Two different Content-Length headers are sent.
@@ -76,7 +76,7 @@ Techniques:
     - Example:
         Content-Length: 10
         Content-Length: 40
-- HTTP/2 → HTTP/1 Desync Smuggling
+- HTTP/2 -> HTTP/1 Desync Smuggling
     - Modern variation when:
         - Client uses HTTP/2
         - Proxy converts to HTTP/1.1

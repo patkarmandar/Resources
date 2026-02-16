@@ -1,2 +1,2 @@
-# Assets
-My billion dollar assets.
+# Resources
+Everything Tech
