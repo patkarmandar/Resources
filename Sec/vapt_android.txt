@@ -2,10 +2,10 @@
 Android Application VAPT
 
 => Static Analysis Tools
-- JADX -> Decompile APK -> Analyze Java code, secrets, logic
-- Apktool -> Decode APK -> Analyze manifest, smali, structure
-- dex2jar -> Convert dex to jar -> Alternative decompile method
 - MobSF -> Automated scanner-> Find vulnerabilities automatically
+- Apktool -> Decode APK -> Analyze manifest, smali, structure
+- JADX -> Decompile APK -> Analyze Java code, secrets, logic
+- dex2jar -> Convert dex to jar -> Alternative decompile method
 - strings -> Extract text from binaries -> Find keys in native libraries
 
 => Dynamic Analysis Tools
@@ -16,25 +16,76 @@ Android Application VAPT
 - ADB -> Control device and access files
 - Logcat -> Monitor app logs
 
-=> Traffic Interception with Burp Suite
-- Configure proxy in Android WiFi
-- Install proxy CA certificate
-- Move certificate to system store (for rooted devices)
-- Bypass SSL pinning using Frida scripts
-
 => Setup & Environment Preparation
 - Test Environment
     - Rooted Android device available
     - Emulator available
+    - Adb configured
     - Burp Suite configured
     - Proxy installed on device
     - CA certificate installed
     - Frida installed and working
     - Objection installed
-    - adb configured
 - Verify:
     - adb devices
     - frida-ps -U
+
+=> Root Detection Bypass
+- Prerequisites: MEmu Emulator (Rooted), Frida, ADB
+- Check connection:
+    - adb devices
+    - adb connect 127.0.0.1:21503
+- Deploy Frida server on MEmu:
+    - Get MEmu Architecture (commonly x86_64): adb shell getprop ro.product.cpu.abi
+    - Download frida-server binary for emulator's architecture
+    - Push downloaded files to the emulator: adb push frida-server /data/local/tmp
+- Run Frida server:
+    - adb shell
+    - cd /data/local/tmp
+    - chmod 755 frida-server
+    - ./frida-server &
+- Verify the installation: frida-ps -U
+- Check for Root Detection Mechanism in code with JADX
+    - Keywords: root, isRoot, checkRoot, superuser, su, RootBeer
+    - Path: /system/bin/su, /system/xbin/su, /sbin/su, /vendor/bin/su, /system/app/Superuser.apk, /system/app/SuperSU.apk, /system/app/Magisk.apk
+    - Command execution checks, Apps run commands: which su, su -c, busybox, id, whoami
+    - File existence checks: File.exists, new File(, canExecute, canRead. Example: new File("/system/xbin/su").exists()
+    - Package checks (Superuser apps): eu.chainfire.supersu, com.topjohnwu.magisk, com.noshufou.android.su, com.koushikdutta.superuser
+    - Root detection libraries: RootBeer, rootbeer, com.scottyab.rootbeer
+    - SafetyNet / Play Integrity checks: SafetyNet, PlayIntegrity, ctsProfileMatch, basicIntegrity, MEETS_DEVICE_INTEGRITY
+- Inject Script: frida -U -f com.ril.rposcentral -l root_bypass.js
+
+=> SSL Pinning Bypass
+- Prerequisites: Frida, MEmu
+- Start Frida Server on Emulator:
+    - Copy frida-server to emulator: adb push frida-server /data/local/tmp/
+    - Give permission:
+        - adb shell
+        - su
+        - chmod 755 /data/local/tmp/frida-server
+    - Run frida-server: /data/local/tmp/frida-server &
+    - Verify connection: frida-ps -U
+- Configure Burp Suite Proxy Listener
+    - Open Burp Suite -> Proxy -> Proxy Settings
+    - Add -> Bind to port: 8080 -> All interfaces
+- Connect Android device to same WiFi
+- Configure Proxy on MEmu Emulator
+    - Settings -> WiFi -> Modify Network -> Advanced Options
+    - Proxy -> Manual -> hostname: <ip> and Port: 8080
+- Install Burp CA Certificate on Emulator
+    - Open browser: http://burp
+    - Download certificate: cacert.der -> Rename to -> cacert.cer
+    - Install certificate: Settings -> Security -> Encryption & credentials -> Install certificate -> CA Certificate -> Select cacert.cer
+- Verify Proxy is Working:
+    - Open browser in emulator and visit: http://example.com
+    - You should see traffic in: Burp → Proxy → HTTP History
+- Run SSL Pinning Bypass Script using Frida:
+    - Launch app with Frida: frida -U -f com.package.name -l ssl_bypass.js --no-pause
+    - Or attach to running app: frida -U -n com.package.name -l ssl_bypass.js
+- Confirm SSL Pinning Bypass:
+    - If bypass is successful: HTTPS traffic will appear in Burp
+    - No SSL errors in app
+    - Requests visible in Burp HTTP History
 
 ---
 
