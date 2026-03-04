@@ -7,3 +7,11 @@ API VAPT
 - gRPC/WebSockets: authentication, message validation
 - API parameter tampering: IDORs, mass assignment
 - API versioning & deprecated endpoints
+- Map endpoints
+- Try mass assignment
+- Injection
+- Logic test
+- API consumption -> rate limit, pagination, size limit, throttling
+- Excessive data exposure
+- Enumeration
+- Swagger UI

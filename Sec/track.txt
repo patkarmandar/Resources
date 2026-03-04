@@ -1,0 +1,44 @@
+
+- Backend Engineering
+- Networking
+    - Protocols, Ports, IP, MAC, DNS
+    - OSI, TCP/IP
+- Web
+    - HTTP/HTTPS
+    - Sessions, Cookies
+    - Authentication, Authorization
+    - Client-Server Architecture
+- Operating System
+    - Linux
+    - Windows
+    - Android
+- Cyber Security Fundamentails
+    - CIA Triad
+    - Cryptography
+    - Threat, Vulnerability, Risk
+    - Attack Surface
+    - Zero Trust Security, Defense-in-depth
+    - OWASP Top 10 (Web, API, Mobile)
+    - 
+- Information Security
+    - Network Security
+    - Application Security
+        - Web
+        - API
+        - Mobile
+            - Android
+            - iOS
+        - Thick Client
+    - Infrastructure Security
+    - Cloud Security
+    - SAST/DAST
+- Source Code Review
+- SDLC Security
+- Offensive Security
+- Security Engineering
+- Threat Modeling
+- DevSecOps
+    - CI/CD Integration
+    - Dependency Scanning
+
+- Microservices, Monolith

@@ -7,10 +7,14 @@ Android Application VAPT
 - JADX -> Decompile APK -> Analyze Java code, secrets, logic
 - dex2jar -> Convert dex to jar -> Alternative decompile method
 - strings -> Extract text from binaries -> Find keys in native libraries
+- APK Editor Studio -> Modify and rebuild APK -> Analyze resources, smali, and patch application components
+- DB Browser for SQLite -> Open and analyze SQLite databases -> Inspect stored data, credentials, tokens, and application records
+- Ghidra -> Reverse engineering framework -> Analyze native libraries (.so), decompile binaries, and identify vulnerabilities
 
 => Dynamic Analysis Tools
-- Frida -> Hook app, bypass protections
-- Objection -> Easy Frida automation
+- MEmu -> Android Emulator
+- Frida -> Dynamic instrumentation toolkit -> Hook functions, bypass root detection, SSL pinning, and monitor runtime behavior
+- Objection -> Runtime mobile exploration toolkit -> Automate Frida-based testing, bypass protections, and inspect app internals
 - BurpSuite -> Intercept and modify API traffic
 - Drozer -> Test exported components
 - ADB -> Control device and access files
@@ -176,6 +180,7 @@ Android Application VAPT
         - Bearer tokens
         - Firebase keys
         - AWS keys
+        - JWT tokens
     - Search keywords:
         - password
         - token
@@ -266,7 +271,7 @@ Android Application VAPT
         - Rate limit bypass
         - Business logic bypass
 - WebView Testing
-    - Check: setJavaScriptEnabled(true)
+    - Check: setJavaScriptEnabled(true), addJavascriptInterface()
     - Test:
         - XSS
         - Load arbitrary URLs
@@ -324,7 +329,7 @@ Android Application VAPT
     - Test:
         - Modify APK
         - Reinstall
-    - Check if detected.
+    - Check if detected
 - Runtime Protections
     - Check presence of:
         - Root detection
@@ -372,8 +377,3 @@ Android Application VAPT
         - MASVS-AUTH
         - MASVS-PLATFORM
         - MASVS-CODE
-- Advanced Exploitation Testing
-    - Test:
-        - SSL pinning bypass
-        - Runtime hooking
-        - Logic manipulation

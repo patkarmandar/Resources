@@ -36,6 +36,8 @@ Web Application VAPT
         - JavaScript Analysis: Parse & review client-side JS for hardcoded secrets, API, keys, tokens, credentials, endpoints, URLs, private IPs, etc.
         - Backup/Config/Cache Files Check: Extensions like .old, .bak, .inc, .src
         - Metadata & Exposed Files: robots.txt, <META> tags, sitemap.xml, .htaccess, sensitive dirs/files
+    - Security Misconfiguration:
+        - Open directories, default creds, exposed stack traces, bad CORS due to debug on, bad headers and open admin panels
 - Active:
     - Hosts Discovery (live hosts) -> ping, nmap, rustscan
     - Port Detection (open ports) -> nmap, masscan, rustscan
@@ -94,6 +96,7 @@ Web Application VAPT
     - Fail-open conditions
     - Multi-stage mechanisms
     - SQL Injections
+    - Missing auth
     - Auto-complete testing
     - Lack of password confirmation on change email, password or 2FA (try change response)
     - Weak login function over HTTP and HTTPS if both are available
@@ -101,6 +104,9 @@ Web Application VAPT
     - Check for password wordlist (cewl and burp-goldenNuggets)
     - Test OAuth login functionality for Open Redirection
     - Test response tampering in SAML authentication
+    - Weak tokens, no expiration
+    - Token reuse
+    - Bad refresh logic
     - In OTP check guessable codes and race conditions
     - OTP, check response manipulation for bypass
     - OTP, try bruteforce
@@ -145,6 +151,7 @@ Web Application VAPT
     - Session flaws: fixation, token reuse, predictable session IDs
     - Session invalidation on logout, concurrent session controls, session binding to IP/user-agent
     - JWT issues -> insecure alg (none, HS256), weak secrets, token expiry
+    - JWT Tampering
 - Profile/Account details:
     - Find parameter with user id and try to tamper in order to get the details of other users
     - Create a list of features that are pertaining to a user account only and try CSRF
@@ -233,8 +240,11 @@ Web Application VAPT
 - File Upload & Storage:
     - Upload bypasses:
         - Malicious extensions (.php, .php.jpg, .svg)
+        - Double extension
         - MIME type & content-type validation bypass
         - Magic bytes
+        - Webshell upload
+        - Path traversal
     - Post-upload risks:
         - Stored XSS in file metadata or preview
         - Direct file access (/uploads/filename.jpg)
@@ -266,6 +276,8 @@ Web Application VAPT
     - Check unsubscribe button with user enumeration
     - Parameter pollution on social media sharing links
     - Change POST sensitive requests to GET
+    - Role transitions, user journey, assumptions
+    - Reusing token, skipping step, act as another user, repeat actions, change order
 - Business Logic Issues:
     - Rate-limiting bypass, account creation abuse, OTP re-use, price manipulation, concurrency/race in discounts or quota counters
     - Cart manipulation, order tampering, coupon stacking, payment flow bypass, unlimited redemption

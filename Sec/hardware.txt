@@ -1,0 +1,14 @@
+
+=> Hardwares
+
+- Rasberry PI
+- Arduino
+- Flipper Zero
+
+- SIM Farm
+- Card Skimmers
+- Keyless Car Relays
+- Immobilizer Programmer
+- Signal Jammer
+- Covert Surveillance Devices
+- Software Defined Radio

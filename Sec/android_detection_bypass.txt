@@ -110,14 +110,17 @@ SSL Pinning:
 - SSL Pinning (a.k.a. Certificate Pinning) is a security technique where an app is programmed to only trust a specific SSL/TLS certificate (or public key) when connecting to a server — instead of trusting all certificates in the device’s system trust store.
 - Why It’s Used:
     - Normally:
-        - Android apps trust hundreds of CA root certificates (built into the OS).
+        - Android apps trust system CA root certificates (built into the OS).
+        - App using HTTPS trust any cert signed by those CAs.
         - If a malicious actor installs a custom CA on the device, they could perform a Man-in-the-Middle (MITM) attack with a fake certificate.
+        - Certificate pinning means the app trust only specific certificate/public keys, not the whole CA store.
     - With SSL Pinning:
         - The app has the server’s certificate or public key “pinned” inside its code.
         - When connecting, it verifies:
             - “Does this cert/key match the pinned one?”
             - If yes -> connection allowed.
             - If no -> connection blocked, even if the cert is valid globally.
+        - So even if you install Burp's CA, the browser works but app traffic fails.
 - Example:
     - Without pinning:
         - App -> Trusts any cert signed by a trusted CA.
@@ -132,8 +135,24 @@ SSL Pinning:
     - Cert/key changes -> app must update or it breaks connectivity.
     - Harder during server migrations.
     - Adds maintenance overhead.
-- In Short: SSL Pinning = hardcoding the server’s cert/key in the app, so it only trusts that and rejects all others.
-It protects against MITM attacks, but can cause issues if the certificate changes and the app isn’t updated.
+- Use:
+    - MITM attacks
+    - Proxy interception
+    - Fake certificates
+    - Network tampering
+- In Short:
+    - SSL Pinning = hardcoding the server’s cert/key in the app, so it only trusts that and rejects all others.
+    - It protects against MITM attacks, but can cause issues if the certificate changes and the app isn’t updated.
+- Type of Pinning:
+    - Cert Pinning -> Hardcoded cert
+    - Public Key Pinning -> Hash of public key
+    - Network Security Config -> XML based pinning
+    - Library Based -> OkHttp, TrustKit
+- Where Found:
+    - network_security_config.xml
+    - OkHttpClient
+    - TrustManager
+    - CertificatePinner
 - Bypass SSL Pinning:
     - Frida Hooks:
         - Frida = dynamic instrumentation tool (attach to running process, hook methods).

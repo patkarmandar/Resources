@@ -253,3 +253,164 @@ Magisk:
     - Many apps check if the device is rooted.
     - Magisk tries to “mask” modifications so these apps continue working.
     - Success depends on Google’s updates and tricks used by the user.
+
+PAIRIP:
+- PAIRIP or libpairipcore.so is a native Android shared library (.so file) used by some mobile applications for security-related checks, especially:
+    - Emulator detection
+    - Root detection
+    - Hooking / instrumentation detection (Frida, Xposed, etc.)
+    - Tamper detection
+- It is commonly seen in apps that use PAIRIP (Pair IP Protection) — a mobile app protection technology.
+- PAIRIP is a commercial mobile app protection solution that:
+    - Protects Android apps against reverse engineering
+    - Detects runtime manipulation
+    - Prevents execution in emulators
+    - Detects debugging tools like Frida
+    - Protects against code tampering and repackaging
+- When an app includes this protection, you’ll typically see: libpairipcore.so inside: /lib/arm64-v8a/
+- Why It’s Used
+    - Developers include libpairipcore.so to:
+    - Prevent dynamic analysis
+    - Stop automated fraud
+    - Protect financial/OTT/enterprise apps
+    - Enforce device integrity checks
+- It usually works alongside:
+    - Native JNI calls
+    - Obfuscated Java/Kotlin code
+    - Encrypted strings
+    - Anti-debug logic
+- libpairipcore.so is very likely performing:
+    - ro.kernel.qemu checks
+    - Build fingerprint checks
+    - Emulator file artifact checks
+    - Frida server detection
+    - ptrace / debugger detection
+    - SELinux state verification
+- That’s why emulator bypass attempts may fail — the detection is happening at native layer, not just Java layer.
+- Technical Level View
+    - It is a:
+    - ELF shared object
+    - Loaded via System.loadLibrary()
+    - Communicates through JNI
+    - Executes C/C++ level integrity checks
+- Because it runs in native space:
+    - Harder to hook
+    - Harder to bypass than Java-only checks
+    - Often uses inline assembly or obfuscated native code
+
+------
+
+## 🚀 Entry Point of an Android Application
+
+Unlike normal Java programs (which start from `main()`), **Android apps do NOT have a traditional `main()` method**.
+
+The entry point depends on the component being launched.
+
+---
+
+## 🏁 1️⃣ Real Low-Level Entry (System Level)
+
+When an Android app starts:
+
+1. The **Android system (Zygote process)** forks a new process.
+2. The framework calls:
+
+```java
+ActivityThread.main()
+```
+
+This is the actual low-level entry point managed by Android OS.
+
+But developers **never control this directly**.
+
+---
+
+## 📱 2️⃣ Practical Entry Point (App Level)
+
+For most apps, the entry point is:
+
+### 👉 The **Launcher Activity**
+
+Defined in `AndroidManifest.xml`:
+
+```xml
+<activity android:name=".MainActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+    </intent-filter>
+</activity>
+```
+
+The Activity that has:
+
+```
+ACTION_MAIN
+CATEGORY_LAUNCHER
+```
+
+is the **starting screen of the app**.
+
+---
+
+## 🧩 3️⃣ Lifecycle-Based Entry
+
+Depending on app type:
+
+| Component         | Entry Callback     |
+| ----------------- | ------------------ |
+| Application class | `onCreate()`       |
+| Activity          | `onCreate()`       |
+| Service           | `onStartCommand()` |
+| BroadcastReceiver | `onReceive()`      |
+
+---
+
+### 🔹 Most Common Flow (Normal App Launch)
+
+```
+ActivityThread.main()
+        ↓
+Application.onCreate()
+        ↓
+LauncherActivity.onCreate()
+        ↓
+LauncherActivity.onStart()
+        ↓
+LauncherActivity.onResume()
+```
+
+---
+
+## 🔐 In Security Testing Context
+
+If you're analyzing protection like `libpairipcore.so`, checks may execute:
+
+* Inside `Application.onCreate()`
+* Inside static initializers
+* During `System.loadLibrary()`
+* Even before first Activity loads
+
+So sometimes detection happens **before UI appears**.
+
+---
+
+## 🎯 Simple Answer
+
+For a normal Android app:
+
+> The practical entry point is the **Launcher Activity’s `onCreate()` method**, defined in the manifest.
+
+But technically:
+
+> The real entry point is `ActivityThread.main()` controlled by the Android framework.
+
+---
+
+If you're analyzing an APK, I can help you:
+
+* Locate real entry class from Manifest
+* Identify where native library loads
+* Trace early security checks
+
+Just share your `AndroidManifest.xml` snippet.
