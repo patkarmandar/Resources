@@ -6,7 +6,8 @@
 - Web
     - HTTP/HTTPS
     - Sessions, Cookies
-    - Authentication, Authorization
+    - Authentication: OAuth, JWT, SSO, MFA
+    - Authorization
     - Client-Server Architecture
 - Operating System
     - Linux
@@ -19,7 +20,6 @@
     - Attack Surface
     - Zero Trust Security, Defense-in-depth
     - OWASP Top 10 (Web, API, Mobile)
-    - 
 - Information Security
     - Network Security
     - Application Security
@@ -31,14 +31,24 @@
         - Thick Client
     - Infrastructure Security
     - Cloud Security
-    - SAST/DAST
+        - AWS, GCP, Azure
+        - IAM
+        - K8s
+    - SAST: Semgrep, CodeQL
+    - DAST
 - Source Code Review
-- SDLC Security
+- Source Design Review
+- Sandboxing
 - Offensive Security
-- Security Engineering
-- Threat Modeling
-- DevSecOps
-    - CI/CD Integration
+- Security Engineering & Tooling
+- SDLC Security
+    - Threat Modeling framework
+    - SAST/DAST pipelines
     - Dependency Scanning
-
-- Microservices, Monolith
+    - CI security
+- DevSecOps
+- CI/CD Integration
+- Software Architecture
+    - Microservices, Monolith
+    - Distributed Systems
+    - Scaling

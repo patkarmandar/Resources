@@ -313,6 +313,20 @@ Common Active Directory Attacks (Red Team)
         - Misconfigured OUs
         - Weak ACL permissions
 
+AD Ports/Services & Attacks
+- Kerberos (88) -> Pass the ticket, Kerberoasting
+- RPC (135) -> Lateral movement, RCE via DCOM
+- NetBIOS (139) -> Null session, Recon
+- LDAP (389) -> Enum of AD objects, users, policies
+- SMB (445) -> EternalBlue, SMB Relay attacks, Credential theft
+- LDAPS (636) -> AD Certificate Service Exploitation
+
+Recon Tools
+- SMB -> smbclient, smbmap, crackmapexec, nmap --script=smb-enum-shares, enum4linux/ng
+- LDAP -> ldapsearch
+- RPC -> rpcclient, enum4linux/ng
+- Kerberos -> kerbrute
+
 Tools Used with Active Directory
 - For administrators:
     - AD Users and Computers

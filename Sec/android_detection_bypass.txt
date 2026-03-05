@@ -1,11 +1,20 @@
 
 => Detection & Bypass Mechanisms
 
-SafetyNet / Play Integrity API:
+SafetyNet / Play Integrity API Bypass:
 - Google’s service that checks device integrity, bootloader state, system modifications.
-- Apps (banking, payments, streaming) use it to decide if they should run.
+- Banking, payments, streaming, DRM apps use it to decide if they should run.
 - Rooted/unlocked devices often fail this check.
 - MagiskHide / Zygisk tries to spoof a clean state.
+- Checks:
+    - Bootloader state
+    - Verified boot
+    - Device integrity
+    - CTS profile
+- Bypass concepts:
+    - Systemless root hiding
+    - Hardware-backed attestation evasion
+    - Play integrity spoofing
 
 Root Detection & Bypass:
 - How Apps Detect Root:
@@ -16,6 +25,14 @@ Root Detection & Bypass:
     - Writable system partitions.
     - Debuggable build tags.
     - Hooked processes (via Xposed, Zygisk).
+- Root Detection Technique:
+    - Magisk files
+    - su binaries
+    - busybox
+    - test-keys
+    - Mount RW
+    - Debuggable
+    - Frida-server
 - Bypassing Root Detection:
     - Magisk Features:
         - Zygisk (Magisk in Zygote) -> injects code at app launch.
@@ -147,7 +164,9 @@ SSL Pinning:
     - Cert Pinning -> Hardcoded cert
     - Public Key Pinning -> Hash of public key
     - Network Security Config -> XML based pinning
-    - Library Based -> OkHttp, TrustKit
+    - Library Based (Java-level) -> OkHttp, TrustKit
+    - Native (OpenSSL/BoringSSL)
+    - Hardware-backed Keystore
 - Where Found:
     - network_security_config.xml
     - OkHttpClient
@@ -157,10 +176,11 @@ SSL Pinning:
     - Frida Hooks:
         - Frida = dynamic instrumentation tool (attach to running process, hook methods).
         - Write a script to override SSL/TLS validation functions.
+        - Hook TrustManager
         - Example: Hook Java classes like checkServerTrusted() or OkHttp’s CertificatePinner.
         - Effect: Always return “valid” regardless of certificate.
     - Objection (Frida-based tool):
-        - Ready-made toolkit built on Frida.
+        - Automated ready-made toolkit built on Frida
         - Run:
             objection --gadget <app> explore
             android sslpinning disable
@@ -173,11 +193,17 @@ SSL Pinning:
     - Magisk Modules:
         - TrustMeAlready (for Magisk/Zygisk) patches SSL functions at runtime.
         - Integrates with modern Magisk hiding techniques.
+        - Universal SSL Unpinning
     - Manual Patching:
         - Smali code patching: Decompile the APK with tools like Apktool.
         - Find SSL pinning logic (e.g., checkServerTrusted).
         - Modify it to skip validation or always return true.
+        - Remove pinning code
+        - Patch native libraries
         - Recompile & sign the app.
+    - Custom CA:
+        - Install custom CA as system CA
+        - Modify app/system trust stores
     - Network Security Config Override:
         - If app uses Android’s network_security_config.xml, sometimes you can modify or inject your own config to accept custom CAs.
         - Easier if app isn’t heavily obfuscated.
@@ -291,3 +317,51 @@ Summary:
 - Riru = Bridge that allows hooking in zygote via Magisk.
 - Frida = Full control with custom hooks (powerful, works on native code too).
 - Together, they enable runtime method hooking to bypass root detection, SSL pinning, debugger checks, etc.
+
+Emulator:
+- Apps refure to run on emulators
+- Checks:
+    - Build properties (generic, sdk)
+    - QEMU drivers
+    - IMEI or sensors missing
+- Bypass concepts:
+    - Property spoofing
+    - Sensor injection
+    - Device fingerprint cloning
+
+Anti-Frida/Anti-Hooking Bypass:
+- Apps actively blocks runtime instrumentation
+- Detection methods:
+    - Frida server ports
+    - Memory scans
+    - Loaded library checks
+    - Thread name inspection
+- Bypass concepts:
+    - Rename/hire Frida
+    - Inline hooking
+    - Early process injection
+    - Kernel-level hooking
+
+Integrity & Tamper Detection Bypass:
+- Detects if APK or memory is modified
+- Checks:
+    - APK signature
+    - Dex checksum
+    - CRC/hash verification
+    - Code section integrity
+- Bypass concepts:
+    - Patch verification logic
+    - Hook integrity functions
+    - Modify return values
+
+Obfuscation & Packing Bypass
+- Makes code unreadable or encrypted
+- Technique:
+    - ProGuard, R8
+    - Dex encryption
+    - Dynamic class loading
+    - Custom packers
+- Bypass concepts:
+    - Runtime dumping
+    - Memory analysis
+    - Decryption hook points
