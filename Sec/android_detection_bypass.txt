@@ -365,3 +365,14 @@ Obfuscation & Packing Bypass
     - Runtime dumping
     - Memory analysis
     - Decryption hook points
+
+PAIRIP (libpairipcore.so)
+- Native Android shared library for security checks
+- Commercial mobile app protection solution (Pair IP Protection)
+- Detects: emulators, root, hooking/instrumentation (Frida, Xposed), tampering
+- ELF shared object loaded via System.loadLibrary()
+- Communicates through JNI, executes C/C++ integrity checks
+- Performs: ro.kernel.qemu checks, build fingerprint checks, emulator artifact checks, Frida detection, ptrace/debugger detection, SELinux verification
+- Harder to hook/bypass than Java-only checks
+- Often uses inline assembly or obfuscated native code
+- Found in: /lib/arm64-v8a/libpairipcore.so
