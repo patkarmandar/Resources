@@ -1,2 +1,2 @@
-# Resources
-Everything Tech
+# Primus
+The Primordial Everything
